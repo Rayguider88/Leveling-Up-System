@@ -1,0 +1,69 @@
+#include <iostream>
+#include <string>
+
+class LevelSystem {
+private:
+    int level;
+    int experience;
+    int experienceToNextLevel;
+
+    // Stats
+    int strength;
+    int agility;
+    int health;
+
+    int calculateExperienceToNextLevel(int lvl) {
+        return 100 * lvl;
+    }
+
+    void levelUp() {
+        level++;
+        experienceToNextLevel = calculateExperienceToNextLevel(level);
+        increaseStats();
+        std::cout << "Congratulations! You reached level " << level << "!" << std::endl;
+        printStats();
+    }
+
+    void increaseStats() {
+        // Increase stats on level up
+        strength += 2;   // +2 Strength per level
+        agility += 1;    // +1 Agility per level
+        health += 10;    // +10 Health per level
+    }
+
+public:
+    LevelSystem() 
+        : level(1), experience(0), strength(10), agility(5), health(100) {
+        experienceToNextLevel = calculateExperienceToNextLevel(level);
+    }
+
+    void gainExperience(int amount) {
+        experience += amount;
+        std::cout << "Gained " << amount << " XP." << std::endl;
+
+        while (experience >= experienceToNextLevel) {
+            experience -= experienceToNextLevel;
+            levelUp();
+        }
+    }
+
+    void printStats() const {
+        std::cout << "Stats - Strength: " << strength
+                  << ", Agility: " << agility
+                  << ", Health: " << health << std::endl;
+    }
+
+    int getLevel() const { return level; }
+    int getExperience() const { return experience; }
+    int getExperienceToNextLevel() const { return experienceToNextLevel; }
+};
+
+int main() {
+    LevelSystem player;
+
+    player.printStats();
+    player.gainExperience(120);  // Level up once
+    player.gainExperience(250);  // Possibly multiple level ups
+
+    return 0;
+}
